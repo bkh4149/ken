@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <canvas id="gameCanvas" width="800" height="600"></canvas> -->
+    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas2" width="400" height="300"></canvas>
+    
+    <script>
+
+        
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const canvas2 = document.getElementById("gameCanvas2");
+        const ctx2 = canvas2.getContext("2d");
+
+        w = window.innerWidth;//実際のWindowsのサイズ
+        h = window.innerHeight;
+        canvas.width = w;//canvasを実サイズに合わせる（デフォルトの800x600から変更）
+        canvas.height = h;
+        katamuki=600/800
+        katamuki2=h/w
+
+        if (katamuki>katamuki2){
+            scale=h/600
+            ctx.scale(scale,scale);
+        }
+        if(katamuki<katamuki2){
+            scale=w/800
+            ctx.scale(scale,scale);
+        };
+        
+        
+        
+
+        // 枠線のスタイルを設定
+        ctx2.strokeStyle = "red"; // 枠線の色
+        ctx2.lineWidth = 5; // 枠線の太さ
+        // キャンバス全体を囲む枠線を描く
+        ctx2.strokeRect(0, 0, canvas2.width, canvas2.height);
+        // フォント設定
+        ctx2.font = "30px Arial";
+        ctx2.fillStyle = "blue"; // 文字の色
+        
+       
+
+
+
+        const image = new Image();
+        image.src = "img/man1.png";
+        const image2 =new Image();
+        image2.src="img/green.png";
+        const image3 =new Image();
+        image3.src="img/sea.png";
+        const image4 =new Image();
+        image4.src="img/stone.png";
+        const image5 =new Image();
+        image5.src="img/mount.png";
+        const image_hune1=new Image;
+        image_hune1.src="img/hune1.png";
+        const image_bug1=new Image;
+        image_bug1.src="img/bug1.png";
+        let movingLeft=false
+        let movingRight=false
+        let movingup=false
+        let movingdown=false
+ 
+        const map=[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,4,4,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,4,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,1,4,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,1,2,2,2,2,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1],
+        [1,1,1,4,1,1,1,1,1,1,1,2,2,2,2,1],
+        [1,1,4,4,1,1,1,1,1,1,1,1,2,2,2,2],
+        [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
+        ]
+        const f1=(e) => {
+            if (e.key === 'ArrowLeft' ) {
+                movingLeft = true;
+            }
+            if (e.key === 'ArrowRight') {
+                movingRight = true;
+            }
+            if (e.key === 'ArrowUp'){
+                movingup = true;
+            }
+            if (e.key === 'ArrowDown'){
+                movingdown = true;
+
+            }
+            console.log("ewns="+ewns)
+        }
+        
+
+        const f2=(e) => {
+            if (e.key === 'ArrowLeft') {
+                movingLeft = false;
+            }
+            if (e.key === 'ArrowRight') {
+                movingRight = false;
+            }
+            if (e.key === 'ArrowUp'){
+                movingup = false;
+            }
+            if (e.key === 'ArrowDown'){
+                movingdown = false;
+            }
+        };
+
+        // キーボードイベントリスナー
+        window.addEventListener('keydown',f1 );
+        window.addEventListener('keyup',f2);
+        
+        isRepeating=false
+        if(movingLeft==true||movingRight==true||movingup==true||movingdown==true){
+            isRepeating=true
+        }
+        else{
+            isRepeating=false
+        }
+        class Player {
+            constructor(x, y, size, image) {
+                this.x = x;
+                this.y = y;
+                this.size=size
+                this.image=image
+                this.f=10
+                this.hp=100
+            }
+            draw(){
+
+                // 文字を描画
+                ctx2.fillStyle = "blue"; // 文字の色
+                ctx2.fillText("HP"+P1.hp, 300, 50);
+                let oldx=this.x
+                let oldy=this.y
+                this.f+=1
+
+                ctx.globalAlpha = this.hp/100*1.5; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+                ctx.globalAlpha = 1; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
+            }
+            update(){
+                if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
+                console.log("is="+isRepeating)
+                if(this.f%10==0||isRepeating==true){
+                    
+                let key=0
+                if(movingup==true){key=0}
+                if(movingdown==true){key=1}
+                if(movingLeft==true){key=2}
+                if(movingRight==true){key=3}
+                let xd=[0,0,-50,50]//上下左右
+                let yd=[-50,50,0,0]
+                let x1=this.x+xd[key]
+                let y1=this.y+yd[key]
+                let xd2=[0,0,-100,100]
+                let yd2=[-100,100,0,0]
+                let x2=this.x+xd2[key]
+                let y2=this.y+yd2[key]
+                let xm1=Math.floor(x1/50)
+                let ym1=Math.floor(y1/50)
+                let xm2=Math.floor(x2/50)
+                let ym2=Math.floor(y2/50)
+                // console.log("key"+key)
+                if (x1<0 || y1>=600 ||x1>=800 || y1<0){return}//枠から外れているかどうか
+                // console.log("xm2="+xm2)
+                // console.log("ym2="+ym2)
+                // console.log("xm1="+xm1)
+                // console.log("ym1="+ym1)
+                if (map[ym1][xm1]!=1){return}//平原以外ではないか
+                let stone_id=Check_stone(x1,y1)
+                if (stone_id>=0){
+                    if (x2<0 || y2>=600 ||x2>=800 || y2<0){return}//枠から外れているかどうか2
+                    if (map[ym2][xm2]!=1){return}//平原以外ではないか2
+                    let stone_id2=Check_stone(x2,y2)
+                    if (stone_id2>=0){return}//2マス先に石があるかどうか
+                    let bugs_id2=Check_bug(x2,y2)//2マス先に虫がいるかどうか
+                    if (bugs_id2>=0){return}
+                    this.x+=xd[key]
+                    this.y+=yd[key]
+                    stones[stone_id].sx+=xd[key]
+                    stones[stone_id].sy+=yd[key]
+                }       
+                if(stone_id==-1){
+                    let bugs_id=Check_bug(x1,y2)
+                    if(bugs_id>=0){return}
+                    this.x+=xd[key]
+                    this.y+=yd[key]
+                }
+                
+            
+
+            this.f=0
+        }
+            if(this.x>750){
+                this.x=750
+            }
+            else if(this.x<0){
+                this.x=0
+            };
+            if(this.y>550){
+                this.y=550
+            }
+            else if(this.y<0){
+                this.y=0
+            };
+
+
+            
+            
+            for (let i = 0; i < 3; i++) {
+                if (stones[i].sy>550 || stones[i].sx>750){
+                if(this.y==stones[i].sy && this.x===stones[i].sx){
+                    this.x=oldx
+                    this.y=oldy
+                }
+            }
+        }
+            
+    }   
+}
+    //ここで動かす石がどれか調べる
+    const Check_stone=(x,y)=>{
+        for (let i = 0; i < 5; i++) {
+            if (x==stones[i].sx && y==stones[i].sy){
+                return i
+            }
+            
+        }
+        return -1
+    }
+    const Check_bug=(x,y)=>{
+        for (let i = 0; i < 3; i++) {
+            if (x==bugs[i].bx && y==bugs[i].by){
+                return i
+            }
+            
+        }
+        return -1
+    }
+
+
+        class Bug {
+            constructor(x, y, size, image) {
+                this.bx = x;
+                this.by = y;
+                this.bx2=Math.floor(this.bx/50)
+                this.by2=Math.floor(this.by/50) 
+                this.size=size
+                this.image=image
+                this.bf=true//行動速度の制限
+                this.bf2=0//10フレーム経ったらbfがtrueになって虫が動く
+                this.bhp=30//これが0になったら虫は消える
+            }
+            draw(){
+
+                //虫の仕様　
+                // 虫のhpが0になるときに周りが過去ってあれば捕まえたと判定してポイントになる。
+                //壁以外の障害物に当たったらhpが減る
+                //スポンジブロックにあたるとダメージを受けない（できたら）
+                
+                let oldbx=this.bx
+                let oldby=this.by
+                
+                this.bx2=Math.floor(this.bx/50)
+                this.by2=Math.floor(this.by/50) 
+                let number = Math.floor(Math.random() * 4); // 0から100の間の整数
+                let bxd=[0,0,-50,50]
+                let byd=[-50,50,0,0]       
+                let bx1=this.bx+bxd[number]
+                let by1=this.by+byd[number]
+                let bxm1=Math.floor(bx1/50)
+                let bym1=Math.floor(by1/50)
+                
+                if (this.bhp>=1){
+                if (this.bf2==10){
+                    this.bf=true
+                    this.bf2=0
+                    this.bhp-=1
+
+
+                    if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
+                    if (map[bym1][bxm1]!=1){return}//平原以外ではないか
+                    let stone_id=Check_stone(bx1,by1)
+                    if (stone_id!=-1){return}
+                    this.bx+=bxd[number]
+                    this.by+=byd[number]
+                    
+
+                    
+                    this.bf=false
+                    this.bhp+=1
+            }
+        }
+                if(this.bhp<=0){
+                    this.bx=1000
+                    
+
+                }
+                
+
+                this.bf2+=1
+
+
+      
+                
+
+                if(this.bx>750){
+                this.bx=750
+                }
+                else if(this.bx<0){
+                    this.bx=0
+                };
+                if(this.by>550){
+                    this.by=550
+                }
+                else if(this.by<0){
+                    this.by=0
+                };
+
+                if(map[this.by2][this.bx2]==2 ){
+                    this.bx=oldbx
+                    this.by=oldby
+                };
+                if(map[this.by2][this.bx2]==3 ){
+                    this.bx=oldbx
+                    this.by=oldby
+                };
+
+                if (this.bhp>0){
+
+                ctx.globalAlpha = this.bhp/30*1.5; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.bx, this.by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                
+                );
+                ctx.globalAlpha =1; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
+                }
+                
+            };
+
+            update(){
+                
+                if(this.bx==P1.x && this.by==P1.y){
+                  P1.hp-=1  
+               
+                }
+    
+
+
+                };
+
+        };
+    
+
+        class Fune{
+            constructor(x, y, size, image_hune1) {
+                this.fx = x;
+                this.fy = y;
+                this.fx2=Math.floor(x/50)
+                this.fy2=Math.floor(y/50) 
+                this.size=size
+                this.image=image_hune1
+                this.ff=true
+                this.ff2=10
+            }
+            draw(){
+                if (this.ff2==10){
+                    this.ff=true
+                    this.ff2=0
+                };
+          
+                let oldfx=this.fx
+                let oldfy=this.fy         
+                let number = Math.floor(Math.random() * 4); // 0から100の間の整数       
+         
+                if (this.ff==true){
+                    if (number==0){
+                    this.fx-=50
+                    }
+                    if(number==1){
+                        this.fx=this.fx+50
+                    }
+                    if (number==2){
+                        this.fy=this.fy-50
+                    }
+                    if(number==3){
+                        this.fy=this.fy+50
+                    }
+                    this.ff=false
+                    
+                };
+                this.ff2+=1
+                
+
+                if(this.fx>750){
+                this.fx=750
+                }     
+                if(this.fy>550){
+                    this.fy=550
+                };
+
+                this.fx2=this.fx/50
+                this.fy2=this.fy/50 
+      
+                if(map[this.fy2][this.fx2]!==2){
+                    this.fx=oldfx
+                    this.fy=oldfy
+                };
+
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.fx, this.fy, 100, 100// 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+            }
+
+        }
+
+
+        class Stone{
+            constructor(x, y, size, image) {
+            this.sx=x
+            this.sy=y
+            this.sx2=Math.floor(x/50)
+            this.sy2=Math.floor(y/50) 
+            this.size=size
+            this.image=image4
+            }
+
+            draw(P1){
+                let oldsx=this.sx
+                let oldsy=this.sy 
+
+                
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.sx, this.sy, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                )
+
+
+
+            }
+
+
+
+
+
+
+        }
+
+
+
+
+
+        const P1=new Player(100,100,50,image)
+        const F1=new Fune(600,450,50,image_hune1)
+
+        const bugs = [];
+        for (let i = 0; i < 3; i++) {
+        const x = 200 + i * 100; // x座標を変化させる
+        const y = 300;          // y座標は固定
+        bugs.push(new Bug(x, y, 50, image_bug1));
+}
+        const stones = [];
+        for (let i = 0; i < 5   ; i++) {
+        const x2 = 0 + i * 100; // x座標を変化させる
+        const y2 = 400;          // y座標は固定
+        stones.push(new Stone(x2, y2, 50,image4));
+}
+let ewns=4
+let ewns2=["右","左","下","上","無"]
+canvas2.addEventListener('mousedown', function(event) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    
+    console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
+    
+    if(10<=x && x<=60 && 60<=y && y<=110){
+        ewns=1
+        movingLeft=true
+    }
+    if(110<=x && x<=160 && 60<=y && y<=110){
+        ewns=0
+        movingRight=true
+    }
+    if(60<=x && x<=110 && 10<=y && y<=60){
+        ewns=3
+        movingup=true
+    }
+    if(60<=x && x<=110 && 110<=y && y<=160){
+        ewns=2
+        movingdown=true
+    }
+    
+    // alert("hello"+x+" y="+y)
+});
+canvas2.addEventListener('mouseup', function(event) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    
+    console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
+    
+    if(10<=x && x<=60 && 60<=y && y<=110){
+        ewns=1
+        movingLeft=false
+    }
+    if(110<=x && x<=160 && 60<=y && y<=110){
+        ewns=0
+        movingRight=false
+    }
+    if(60<=x && x<=110 && 10<=y && y<=60){
+        ewns=3
+        movingup=false
+    }
+    if(60<=x && x<=110 && 110<=y && y<=160){
+        ewns=2
+        movingdown=false
+    }
+    
+    // alert("hello"+x+" y="+y)
+});
+
+
+        
+        function draw_flame(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height); // 画面クリア
+            // 画像がロードされたら描画
+            // image.onload = function() {
+            // 直線を描く
+            // ctx2.beginPath();
+            // ctx2.moveTo(lx, 300); // 始点
+            // ctx2.lineTo(lx+100, 300); // 終点
+            // ctx2.strokeStyle = "black"; // 線の色
+            // ctx2.lineWidth = 10; // 線の太さ
+            // ctx2.stroke(); // 線を描画
+            
+            // ctx2.fillStyle = 'blue';
+            // ctx2.fillRect(10, 10, 300, 200); // 塗りつぶした四角
+            ctx2.fillStyle = "blue"; // 文字の色
+            ctx2.strokeStyle = 'red';
+            ctx2.strokeRect(10, 60, 50, 50); // 枠線だけの四角
+            ctx2.fillText("左", 20, 100);
+            ctx2.strokeRect(110, 60, 50, 50); // 枠線だけの四角
+            ctx2.fillText("右", 120, 100);
+            ctx2.strokeRect(60, 10, 50, 50); // 枠線だけの四角
+            ctx2.fillText("上", 70, 40);
+            ctx2.strokeRect(60, 110, 50, 50); // 枠線だけの四角
+            ctx2.fillText("下", 70, 150);
+            ctx2.fillStyle = "green"; // 文字の色
+            ctx2.fillText(ewns2[ewns], 300, 100);
+            
+            for(let i=0;i<12;i++){  
+              for(let u=0;u<16;u++){
+                if(map[i][u]==1){
+                ctx.drawImage(
+                    image2,
+                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
+                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+                };
+                if(map[i][u]==2){
+                ctx.drawImage(
+                    image3,
+                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
+                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+                };
+                if(map[i][u]==3){
+                ctx.drawImage(
+                    image4,
+                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
+                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+                };
+                if(map[i][u]==4){
+                ctx.drawImage(
+                    image5,
+                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
+                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+                };
+              }  
+            }
+            P1.draw();
+            P1.update()
+            F1.draw();
+            for (const bug of bugs) {
+                    bug.draw();
+                    bug.update();
+                }
+                for (const stone of stones) {
+                    stone.draw(P1);
+                }
+            
+            if(P1.hp==0){
+            ctx2.fillText("敗北しました", 50, 100)
+            }
+            if(P1.hp>0){
+            requestAnimationFrame(draw_flame)
+            }
+        };
+        
+
+        image.onload = function() {
+        draw_flame();
+        console.log("aaa")
+        };
+        
+    </script>
+</body>
+</html>
