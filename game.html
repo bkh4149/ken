@@ -4,19 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        body, html {
-  margin: 0;
-  overflow: hidden; /* スクロール禁止 */
-}
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-
-    </style>
+    
 </head>
 <body>
     <!-- <canvas id="gameCanvas" width="800" height="600"></canvas> -->
@@ -537,6 +525,62 @@ canvas2.addEventListener('mouseup', function(event) {
     // alert("hello"+x+" y="+y)
 });
 
+
+canvas2.addEventListener('touchstart', function(event) {
+    const touch = event.changedTouches[0];  // タッチ終了時の座標を取る
+    const x = touch.clientX - canvas2.getBoundingClientRect().left;
+    const y = touch.clientY - canvas2.getBoundingClientRect().top;
+
+    
+    cconsole.log(`X: ${x}, Y: ${y}`);
+
+    
+    if(10<=x && x<=60 && 60<=y && y<=110){
+        ewns=1
+        movingLeft=true
+    }
+    if(110<=x && x<=160 && 60<=y && y<=110){
+        ewns=0
+        movingRight=true
+    }
+    if(60<=x && x<=110 && 10<=y && y<=60){
+        ewns=3
+        movingup=true
+    }
+    if(60<=x && x<=110 && 110<=y && y<=160){
+        ewns=2
+        movingdown=true
+    }
+    
+    // alert("hello"+x+" y="+y)
+});
+canvas2.addEventListener('touchend', function(event) {
+    const touch = event.changedTouches[0];  // タッチ終了時の座標を取る
+    const x = touch.clientX - canvas2.getBoundingClientRect().left;
+    const y = touch.clientY - canvas2.getBoundingClientRect().top;
+
+    console.log(`X: ${x}, Y: ${y}`);
+
+    
+    if(10<=x && x<=60 && 60<=y && y<=110){
+        ewns=1
+        movingLeft=false
+    }
+    if(110<=x && x<=160 && 60<=y && y<=110){
+        ewns=0
+        movingRight=false
+    }
+    if(60<=x && x<=110 && 10<=y && y<=60){
+        ewns=3
+        movingup=false
+    }
+    if(60<=x && x<=110 && 110<=y && y<=160){
+        ewns=2
+        movingdown=false
+    }
+    
+    // alert("hello"+x+" y="+y)
+});
 
         
         function draw_flame(){
