@@ -287,37 +287,23 @@
                 let bym1=Math.floor(by1/50)
                 
                 if (this.bhp>=1){
-                if (this.bf2==10){
-                    this.bf=true
-                    this.bf2=0
-                    this.bhp-=1
-
-
-                    if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
-                    if (map[bym1][bxm1]!=1){return}//平原以外ではないか
-                    let stone_id=Check_stone(bx1,by1)
-                    if (stone_id!=-1){return}
-                    this.bx+=bxd[number]
-                    this.by+=byd[number]
-                    
-
-                    
-                    this.bf=false
-                    this.bhp+=1
-            }
-        }
+                    if (this.bf2==10){
+                        this.bf2=0
+                        this.bhp-=1
+                        if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
+                        if (map[bym1][bxm1]!=1){return}//平原以外ではないか
+                        let stone_id=Check_stone(bx1,by1)
+                        if (stone_id!=-1){return}
+                        this.bx+=bxd[number]
+                        this.by+=byd[number]
+                        this.bhp=30
+                    }
+                }
                 if(this.bhp<=0){
                     this.bx=1000
-                    
-
                 }
                 
-
                 this.bf2+=1
-
-
-      
-                
 
                 if(this.bx>750){
                 this.bx=750
