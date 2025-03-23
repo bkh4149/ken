@@ -4,7 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+     <style>
+        /* 余白とスクロールを無効化 */
+        body, html {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* キャンバスを重ねるためのコンテナ */
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 背景キャンバス (画面全体) */
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 前景キャンバス (300x400 固定) */
+        #gameCanvas2 {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgb(66, 33, 33);
+        }
+    </style>
 </head>
 <body>
     <!-- <canvas id="gameCanvas" width="800" height="600"></canvas> -->
