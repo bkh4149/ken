@@ -55,6 +55,9 @@
         const canvas2 = document.getElementById("gameCanvas2");
         const ctx2 = canvas2.getContext("2d");
 
+        let tcx=0
+        let tcy=0
+        
         w = window.innerWidth;//実際のWindowsのサイズ
         h = window.innerHeight;
         canvas.width = w;//canvasを実サイズに合わせる（デフォルトの800x600から変更）
@@ -65,12 +68,12 @@
         if (katamuki>katamuki2){
             scale=h/600
             ctx.scale(scale,scale);
-            ctx2.scale(scale,scale);
+            ctx2.scale(1,1);
         }
         if(katamuki<katamuki2){
             scale=w/800
             ctx.scale(scale,scale);
-            ctx2.scale(scale,scale);
+            ctx2.scale(1,1);
         };
         
         
@@ -572,7 +575,8 @@ canvas2.addEventListener('touchstart', function(event) {
     const x = touch.clientX - canvas2.getBoundingClientRect().left;
     const y = touch.clientY - canvas2.getBoundingClientRect().top;
 
-    
+    tcx=x
+    tcy=y
     cconsole.log(`X: ${x}, Y: ${y}`);
 
     
@@ -697,9 +701,9 @@ canvas2.addEventListener('touchend', function(event) {
                 for (const stone of stones) {
                     stone.draw(P1);
                 }
-            ctx2.fillText("aaa", 0, 50);
             ctx2.fillText(String(scale), 0, 180);
-
+            ctx2.fillText("X"+String(tcx), 50, 180);
+            ctx2.fillText("Y"+String(tcy), 100, 250);
             if(P1.hp==0){
             ctx2.fillText("敗北しました", 50, 100)
             }
@@ -717,4 +721,3 @@ canvas2.addEventListener('touchend', function(event) {
     </script>
 </body>
 </html>
-gi
