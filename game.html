@@ -686,7 +686,6 @@ canvas2.addEventListener('touchend', function(event) {
             }
 
 
-            ctx.fillText(String(scale), 410, 100);
 
             P1.draw();
             P1.update()
@@ -698,7 +697,9 @@ canvas2.addEventListener('touchend', function(event) {
                 for (const stone of stones) {
                     stone.draw(P1);
                 }
-            
+            ctx2.fillText("aaa", 0, 50);
+            ctx2.fillText(String(scale), 0, 180);
+
             if(P1.hp==0){
             ctx2.fillText("敗北しました", 50, 100)
             }
@@ -716,3 +717,4 @@ canvas2.addEventListener('touchend', function(event) {
     </script>
 </body>
 </html>
+gi
