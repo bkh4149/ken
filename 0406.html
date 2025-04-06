@@ -1,44 +1,11 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0406</title>
-     <style>
-        /* 余白とスクロールを無効化 */
-        body, html {
-            margin: 0;
-            overflow: hidden;
-        }
-
-        /* キャンバスを重ねるためのコンテナ */
-        #canvas-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* 背景キャンバス (画面全体) */
-        #gameCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* 前景キャンバス (300x400 固定) */
-        #gameCanvas2 {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            top: 0px;
-            left: 0px;
-            border: 2px solid rgb(66, 33, 33);
-        }
-
-   
-
+    <title>Document</title>
+    <style>
+        
     </style>
 </head>
 <body>
@@ -47,8 +14,8 @@
     <canvas id="gameCanvas2" width="400" height="300"></canvas>
     
     <script>
-
         window.onload = function() {
+        
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
@@ -65,12 +32,10 @@
         if (katamuki>katamuki2){
             scale=h/600
             ctx.scale(scale,scale);
-            ctx2.scale(scale,scale);
         }
         if(katamuki<katamuki2){
             scale=w/800
             ctx.scale(scale,scale);
-            ctx2.scale(scale,scale);
         };
         
         
@@ -136,6 +101,7 @@
 
             }
             console.log("ewns="+ewns)
+            isRepeating=true
         }
         
 
@@ -152,6 +118,7 @@
             if (e.key === 'ArrowDown'){
                 movingdown = false;
             }
+            isRepeating=false
         };
 
         // キーボードイベントリスナー
@@ -159,12 +126,7 @@
         window.addEventListener('keyup',f2);
         
         isRepeating=false
-        if(movingLeft==true||movingRight==true||movingup==true||movingdown==true){
-            isRepeating=true
-        }
-        else{
-            isRepeating=false
-        }
+        
         class Player {
             constructor(x, y, size, image) {
                 this.x = x;
@@ -194,7 +156,7 @@
             update(){
                 if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
                 console.log("is="+isRepeating)
-                if(this.f%10==0||isRepeating==true){
+                if(this.f%10==0||isRepeating==false){
                     
                 let key=0
                 if(movingup==true){key=0}
@@ -325,23 +287,37 @@
                 let bym1=Math.floor(by1/50)
                 
                 if (this.bhp>=1){
-                    if (this.bf2==10){
-                        this.bf2=0
-                        this.bhp-=1
-                        if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
-                        if (map[bym1][bxm1]!=1){return}//平原以外ではないか
-                        let stone_id=Check_stone(bx1,by1)
-                        if (stone_id!=-1){return}
-                        this.bx+=bxd[number]
-                        this.by+=byd[number]
-                        this.bhp=30
-                    }
-                }
+                if (this.bf2==10){
+                    this.bf=true
+                    this.bf2=0
+                    this.bhp-=1
+
+
+                    if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
+                    if (map[bym1][bxm1]!=1){return}//平原以外ではないか
+                    let stone_id=Check_stone(bx1,by1)
+                    if (stone_id!=-1){return}
+                    this.bx+=bxd[number]
+                    this.by+=byd[number]
+                    
+
+                    
+                    this.bf=false
+                    this.bhp+=1
+            }
+        }
                 if(this.bhp<=0){
                     this.bx=1000
+                    
+
                 }
                 
+
                 this.bf2+=1
+
+
+      
+                
 
                 if(this.bx>750){
                 this.bx=750
@@ -545,67 +521,6 @@ canvas2.addEventListener('mouseup', function(event) {
     if(10<=x && x<=60 && 60<=y && y<=110){
         ewns=1
         movingLeft=false
-        //左 
-    }
-    if(110<=x && x<=160 && 60<=y && y<=110){
-        ewns=0
-        movingRight=false
-        //右
-    }
-    if(60<=x && x<=110 && 10<=y && y<=60){
-        ewns=3
-        movingup=false
-        //上
-    }
-    if(60<=x && x<=110 && 110<=y && y<=160){
-        ewns=2
-        movingdown=false
-        //下
-    }
-    
-    // alert("hello"+x+" y="+y)
-});
-
-
-canvas2.addEventListener('touchstart', function(event) {
-    const touch = event.changedTouches[0];  // タッチ終了時の座標を取る
-    const x = touch.clientX - canvas2.getBoundingClientRect().left;
-    const y = touch.clientY - canvas2.getBoundingClientRect().top;
-
-    
-    cconsole.log(`X: ${x}, Y: ${y}`);
-
-    
-    if(10<=x && x<=60 && 60<=y && y<=110){
-        ewns=1
-        movingLeft=true
-    }
-    if(110<=x && x<=160 && 60<=y && y<=110){
-        ewns=0
-        movingRight=true
-    }
-    if(60<=x && x<=110 && 10<=y && y<=60){
-        ewns=3
-        movingup=true
-    }
-    if(60<=x && x<=110 && 110<=y && y<=160){
-        ewns=2
-        movingdown=true
-    }
-    
-    // alert("hello"+x+" y="+y)
-});
-canvas2.addEventListener('touchend', function(event) {
-    const touch = event.changedTouches[0];  // タッチ終了時の座標を取る
-    const x = touch.clientX - canvas2.getBoundingClientRect().left;
-    const y = touch.clientY - canvas2.getBoundingClientRect().top;
-
-    console.log(`X: ${x}, Y: ${y}`);
-
-    
-    if(10<=x && x<=60 && 60<=y && y<=110){
-        ewns=1
-        movingLeft=false
     }
     if(110<=x && x<=160 && 60<=y && y<=110){
         ewns=0
@@ -622,6 +537,7 @@ canvas2.addEventListener('touchend', function(event) {
     
     // alert("hello"+x+" y="+y)
 });
+
 
         
         function draw_flame(){
@@ -684,10 +600,6 @@ canvas2.addEventListener('touchend', function(event) {
                 };
               }  
             }
-
-
-            ctx.fillText(String(scale), 410, 100);
-
             P1.draw();
             P1.update()
             F1.draw();
@@ -712,7 +624,9 @@ canvas2.addEventListener('touchend', function(event) {
         draw_flame();
         console.log("aaa")
         };
-    }
+
+
+        }
     </script>
 </body>
 </html>

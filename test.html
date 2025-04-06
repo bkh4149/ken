@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 余白とスクロールを無効化 */
+        body, html {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* キャンバスを重ねるためのコンテナ */
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 背景キャンバス (画面全体) */
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 600px;
+            border: 2px solid rgb(64, 60, 110);
+        }
+
+        /* 前景キャンバス (300x400 固定) */
+        #gameCanvas2 {
+            position: absolute;
+            width: 400px;
+            height: 300px;
+            top: 0px;
+            left: 0px;
+            border: 2px solid rgb(66, 33, 33);
+        }
+
+   
+
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas2" width="400" height="300"></canvas>
+</body>
+</html>
