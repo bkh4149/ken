@@ -55,6 +55,9 @@
         const canvas2 = document.getElementById("gameCanvas2");
         const ctx2 = canvas2.getContext("2d");
 
+        let tcx=0
+        let tcy=0
+        
         w = window.innerWidth;//実際のWindowsのサイズ
         h = window.innerHeight;
         canvas.width = w;//canvasを実サイズに合わせる（デフォルトの800x600から変更）
@@ -688,7 +691,6 @@ canvas2.addEventListener('touchend', function(event) {
             }
 
 
-            ctx.fillText(String(scale), 410, 100);
 
             P1.draw();
             P1.update()
