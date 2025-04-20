@@ -11,21 +11,6 @@
             overflow: hidden;
         }
 
-        /* キャンバスを重ねるためのコンテナ */
-        #canvas-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* 背景キャンバス (画面全体) */
-        #gameCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
 
         /* 前景キャンバス (300x400 固定) */
         #gameCanvas2 {
@@ -43,33 +28,32 @@
 </head>
 <body>
     <!-- <canvas id="gameCanvas" width="800" height="600"></canvas> -->
-    <canvas id="gameCanvas"></canvas>
+    
     <canvas id="gameCanvas2" width="400" height="300"></canvas>
     
     <script>
 
         window.onload = function() {
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-
+        
+        
         const canvas2 = document.getElementById("gameCanvas2");
         const ctx2 = canvas2.getContext("2d");
 
         w = window.innerWidth;//実際のWindowsのサイズ
         h = window.innerHeight;
-        canvas.width = w;//canvasを実サイズに合わせる（デフォルトの800x600から変更）
-        canvas.height = h;
+        
+        
         katamuki=600/800
         katamuki2=h/w
 
         if (katamuki>katamuki2){
             scale=h/600
-            ctx.scale(scale,scale);
+            
             ctx2.scale(1,1);
         }
         if(katamuki<katamuki2){
             scale=w/800
-            ctx.scale(scale,scale);
+            
             ctx2.scale(1,1);
         };
         
@@ -183,13 +167,7 @@
                 let oldy=this.y
                 this.f+=1
 
-                ctx.globalAlpha = this.hp/100*1.5; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
-                ctx.drawImage(
-                    this.image,
-                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
-                    this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
-                );
-                ctx.globalAlpha = 1; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
+             
             }
             update(){
                 if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
@@ -365,17 +343,7 @@
                     this.by=oldby
                 };
 
-                if (this.bhp>0){
-
-                ctx.globalAlpha = this.bhp/30*1.5; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
-                ctx.drawImage(
-                    this.image,
-                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
-                    this.bx, this.by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 
-                );
-                ctx.globalAlpha =1; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
-                }
                 
             };
 
@@ -448,11 +416,7 @@
                     this.fy=oldfy
                 };
 
-                ctx.drawImage(
-                    this.image,
-                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
-                    this.fx, this.fy, 100, 100// 描画する位置とサイズ (dx, dy, dw, dh)
-                );
+               
             }
 
         }
@@ -473,11 +437,7 @@
                 let oldsy=this.sy 
 
                 
-                ctx.drawImage(
-                    this.image,
-                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
-                    this.sx, this.sy, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
-                )
+               
 
 
 
@@ -517,22 +477,27 @@ canvas2.addEventListener('mousedown', function(event) {
     
     console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
     
-    if(10<=x && x<=60 && 60<=y && y<=110){
+    if(10<=x && x<=45 && 60<=y && y<=110){
         ewns=1
         movingLeft=true
     }
-    if(110<=x && x<=160 && 60<=y && y<=110){
+    else if(85<=x && x<=120 && 60<=y && y<=110){
         ewns=0
         movingRight=true
     }
-    if(60<=x && x<=110 && 10<=y && y<=60){
+    else if(60<=x && x<=110 && 10<=y && y<=60){
         ewns=3
         movingup=true
     }
-    if(60<=x && x<=110 && 110<=y && y<=160){
+    else if(60<=x && x<=110 && 110<=y && y<=160){
         ewns=2
         movingdown=true
     }
+    else{
+        ewns=4
+        movingdown=true
+    }
+    
     
     // alert("hello"+x+" y="+y)
 });
@@ -542,25 +507,29 @@ canvas2.addEventListener('mouseup', function(event) {
     
     console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
     
-    if(10<=x && x<=60 && 60<=y && y<=110){
+    if(10<=x && x<=45 && 60<=y && y<=110){
         ewns=1
         movingLeft=false
         //左 
     }
-    if(110<=x && x<=160 && 60<=y && y<=110){
+    else if(85<=x && x<=120 && 60<=y && y<=110){
         ewns=0
         movingRight=false
         //右
     }
-    if(60<=x && x<=110 && 10<=y && y<=60){
+    else if(60<=x && x<=110 && 10<=y && y<=60){
         ewns=3
         movingup=false
         //上
     }
-    if(60<=x && x<=110 && 110<=y && y<=160){
+    else if(60<=x && x<=110 && 110<=y && y<=160){
         ewns=2
         movingdown=false
         //下
+    }
+    else{
+        ewns=4
+        movingdown=false
     }
     
     // alert("hello"+x+" y="+y)
@@ -625,7 +594,7 @@ canvas2.addEventListener('touchend', function(event) {
 
         
         function draw_flame(){
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+            
             ctx2.clearRect(0, 0, canvas2.width, canvas2.height); // 画面クリア
             // 画像がロードされたら描画
             // image.onload = function() {
@@ -634,18 +603,16 @@ canvas2.addEventListener('touchend', function(event) {
             // ctx2.moveTo(lx, 300); // 始点
             // ctx2.lineTo(lx+100, 300); // 終点
             // ctx2.strokeStyle = "black"; // 線の色
-            
+            // ctx2.lineWidth = 10; // 線の太さ
             // ctx2.stroke(); // 線を描画
             
             // ctx2.fillStyle = 'blue';
             // ctx2.fillRect(10, 10, 300, 200); // 塗りつぶした四角
             ctx2.fillStyle = "blue"; // 文字の色
             ctx2.strokeStyle = 'red';
-            
             ctx2.strokeRect(10, 60, 50, 50); // 枠線だけの四角
             ctx2.fillText("左", 20, 100);
             ctx2.strokeRect(110, 60, 50, 50); // 枠線だけの四角
-            ctx2.lineWidth = 1; // 線の太さ    
             ctx2.fillText("右", 120, 100);
             ctx2.strokeRect(60, 10, 50, 50); // 枠線だけの四角
             ctx2.fillText("上", 70, 40);
@@ -654,41 +621,10 @@ canvas2.addEventListener('touchend', function(event) {
             ctx2.fillStyle = "green"; // 文字の色
             ctx2.fillText(ewns2[ewns], 300, 100);
             
-            for(let i=0;i<12;i++){  
-              for(let u=0;u<16;u++){
-                if(map[i][u]==1){
-                ctx.drawImage(
-                    image2,
-                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
-                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
-                );
-                };
-                if(map[i][u]==2){
-                ctx.drawImage(
-                    image3,
-                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
-                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
-                );
-                };
-                if(map[i][u]==3){
-                ctx.drawImage(
-                    image4,
-                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
-                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
-                );
-                };
-                if(map[i][u]==4){
-                ctx.drawImage(
-                    image5,
-                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
-                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
-                );
-                };
-              }  
-            }
+            
 
 
-            ctx.fillText(String(scale), 410, 100);
+
 
             P1.draw();
             P1.update()
@@ -701,7 +637,9 @@ canvas2.addEventListener('touchend', function(event) {
                     stone.draw(P1);
                 }
             
-            
+            if(P1.hp==0){
+            ctx2.fillText("敗北しました", 50, 100)
+            }
             if(P1.hp>0){
             requestAnimationFrame(draw_flame)
             }
